@@ -11,7 +11,7 @@ import {
 
 export const createStore = <S, A extends Actions<S>>(
   initialState: S,
-  actions: A,
+  actions?: A,
   config?: Config<S>
 ): Store<S, A> => {
   const persistConfig = config?.persist
@@ -31,9 +31,11 @@ export const createStore = <S, A extends Actions<S>>(
 
   const boundActions: ActionsResponse<S, A> = {} as ActionsResponse<S, A>
 
-  for (const [action, fn] of Object.entries(actions)) {
-    boundActions[action as keyof A] = (payload: any) =>
-      store.setState(produce((state) => fn(state, payload)))
+  if (actions) {
+    for (const [action, fn] of Object.entries(actions)) {
+      boundActions[action as keyof A] = (payload: any) =>
+        store.setState(produce((state) => fn(state, payload)))
+    }
   }
 
   return { store, actions: boundActions }
