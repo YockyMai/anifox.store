@@ -1,15 +1,16 @@
 import { produce } from 'immer'
-import { create } from 'zustand'
+import { create, useStore } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 import {
   Actions,
   ActionsResponse,
   Config,
+  Selectors,
   Store
 } from './create-store.interface'
 
-export const createStore = <S, A extends Actions<S>>(
+export const createStore = <S extends object, A extends Actions<S>>(
   initialState: S,
   actions?: A,
   config?: Config<S>
@@ -38,5 +39,12 @@ export const createStore = <S, A extends Actions<S>>(
     }
   }
 
-  return { store, actions: boundActions }
+  const selectors = {} as Selectors<S>
+
+  for (const k of Object.keys(store.getState())) {
+    ;(selectors as any)[k] = () =>
+      useStore(store, (s) => s[k as keyof typeof s])
+  }
+
+  return { store, actions: boundActions, selectors }
 }
