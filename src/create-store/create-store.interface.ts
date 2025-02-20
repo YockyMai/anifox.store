@@ -3,11 +3,11 @@ import { StoreApi, UseBoundStore } from 'zustand'
 import { PersistOptions } from 'zustand/middleware'
 
 export type Actions<S> = {
-  [K: string]: (state: S, payload: any) => void
+  [K: string]: (state: S, payload?: any) => void
 }
 
 export type ActionsResponse<S, A extends Actions<S>> = {
-  [K in keyof A]: (payload: Parameters<A[K]>[1]) => void
+  [K in keyof A]: (payload?: Parameters<A[K]>[1]) => void
 }
 
 export type Selectors<S> = {

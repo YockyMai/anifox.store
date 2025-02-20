@@ -34,7 +34,7 @@ export const createStore = <S extends object, A extends Actions<S>>(
 
   if (actions) {
     for (const [action, fn] of Object.entries(actions)) {
-      boundActions[action as keyof A] = (payload: any) =>
+      boundActions[action as keyof A] = (payload?: any) =>
         store.setState(produce((state) => fn(state, payload)))
     }
   }
